@@ -3,13 +3,12 @@
 //
 // DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
 //
-var thrift = require('thrift');
-var Thrift = thrift.Thrift;
-var Q = thrift.Q;
-var Int64 = require('node-int64');
+const thrift = require('thrift');
+const Thrift = thrift.Thrift;
+const Int64 = require('node-int64');
 
 
-var ttypes = module.exports = {};
+const ttypes = module.exports = {};
 if (typeof tutorial === 'undefined') {
   tutorial = {};
 }

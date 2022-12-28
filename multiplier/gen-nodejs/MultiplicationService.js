@@ -3,300 +3,247 @@
 //
 // DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
 //
-var thrift = require('thrift');
-var Thrift = thrift.Thrift;
-var Q = thrift.Q;
-var Int64 = require('node-int64');
+const thrift = require('thrift');
+const Thrift = thrift.Thrift;
+const Int64 = require('node-int64');
 
-var ttypes = require('./multiply_types');
+
+const ttypes = require('./multiply_types');
 //HELPER FUNCTIONS AND STRUCTURES
 
-tutorial.MultiplicationService_multiply_args = function (args) {
-  this.n1 = null;
-  this.n2 = null;
-  if (args) {
-    if (args.n1 !== undefined && args.n1 !== null) {
-      this.n1 = args.n1;
-    }
-    if (args.n2 !== undefined && args.n2 !== null) {
-      this.n2 = args.n2;
+tutorial.MultiplicationService_multiply_args = class {
+  constructor(args) {
+    this.n1 = null;
+    this.n2 = null;
+    if (args) {
+      if (args.n1 !== undefined && args.n1 !== null) {
+        this.n1 = args.n1;
+      }
+      if (args.n2 !== undefined && args.n2 !== null) {
+        this.n2 = args.n2;
+      }
     }
   }
-};
-tutorial.MultiplicationService_multiply_args.prototype = {};
-tutorial.MultiplicationService_multiply_args.prototype.read = function (input) {
-  input.readStructBegin();
-  while (true) {
-    var ret = input.readFieldBegin();
-    var ftype = ret.ftype;
-    var fid = ret.fid;
-    if (ftype == Thrift.Type.STOP) {
-      break;
-    }
-    switch (fid) {
-      case 1:
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 1:
         if (ftype == Thrift.Type.I32) {
           this.n1 = input.readI32();
         } else {
           input.skip(ftype);
         }
         break;
-      case 2:
+        case 2:
         if (ftype == Thrift.Type.I32) {
           this.n2 = input.readI32();
         } else {
           input.skip(ftype);
         }
         break;
-      default:
-        input.skip(ftype);
+        default:
+          input.skip(ftype);
+      }
+      input.readFieldEnd();
     }
-    input.readFieldEnd();
+    input.readStructEnd();
+    return;
   }
-  input.readStructEnd();
-  return;
-};
 
-tutorial.MultiplicationService_multiply_args.prototype.write = function (
-  output
-) {
-  output.writeStructBegin('MultiplicationService_multiply_args');
-  if (this.n1 !== null && this.n1 !== undefined) {
-    output.writeFieldBegin('n1', Thrift.Type.I32, 1);
-    output.writeI32(this.n1);
-    output.writeFieldEnd();
+  write (output) {
+    output.writeStructBegin('MultiplicationService_multiply_args');
+    if (this.n1 !== null && this.n1 !== undefined) {
+      output.writeFieldBegin('n1', Thrift.Type.I32, 1);
+      output.writeI32(this.n1);
+      output.writeFieldEnd();
+    }
+    if (this.n2 !== null && this.n2 !== undefined) {
+      output.writeFieldBegin('n2', Thrift.Type.I32, 2);
+      output.writeI32(this.n2);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
   }
-  if (this.n2 !== null && this.n2 !== undefined) {
-    output.writeFieldBegin('n2', Thrift.Type.I32, 2);
-    output.writeI32(this.n2);
-    output.writeFieldEnd();
-  }
-  output.writeFieldStop();
-  output.writeStructEnd();
-  return;
-};
 
-tutorial.MultiplicationService_multiply_result = function (args) {
-  this.success = null;
-  if (args) {
-    if (args.success !== undefined && args.success !== null) {
-      this.success = args.success;
+};
+tutorial.MultiplicationService_multiply_result = class {
+  constructor(args) {
+    this.success = null;
+    if (args) {
+      if (args.success !== undefined && args.success !== null) {
+        this.success = args.success;
+      }
     }
   }
-};
-tutorial.MultiplicationService_multiply_result.prototype = {};
-tutorial.MultiplicationService_multiply_result.prototype.read = function (
-  input
-) {
-  input.readStructBegin();
-  while (true) {
-    var ret = input.readFieldBegin();
-    var ftype = ret.ftype;
-    var fid = ret.fid;
-    if (ftype == Thrift.Type.STOP) {
-      break;
-    }
-    switch (fid) {
-      case 0:
+
+  read (input) {
+    input.readStructBegin();
+    while (true) {
+      const ret = input.readFieldBegin();
+      const ftype = ret.ftype;
+      const fid = ret.fid;
+      if (ftype == Thrift.Type.STOP) {
+        break;
+      }
+      switch (fid) {
+        case 0:
         if (ftype == Thrift.Type.I32) {
           this.success = input.readI32();
         } else {
           input.skip(ftype);
         }
         break;
-      case 0:
-        input.skip(ftype);
-        break;
-      default:
-        input.skip(ftype);
-    }
-    input.readFieldEnd();
-  }
-  input.readStructEnd();
-  return;
-};
-
-tutorial.MultiplicationService_multiply_result.prototype.write = function (
-  output
-) {
-  output.writeStructBegin('MultiplicationService_multiply_result');
-  if (this.success !== null && this.success !== undefined) {
-    output.writeFieldBegin('success', Thrift.Type.I32, 0);
-    output.writeI32(this.success);
-    output.writeFieldEnd();
-  }
-  output.writeFieldStop();
-  output.writeStructEnd();
-  return;
-};
-
-tutorial.MultiplicationServiceClient = exports.Client = function (
-  output,
-  pClass
-) {
-  this.output = output;
-  this.pClass = pClass;
-  this._seqid = 0;
-  this._reqs = {};
-};
-tutorial.MultiplicationServiceClient.prototype = {};
-tutorial.MultiplicationServiceClient.prototype.seqid = function () {
-  return this._seqid;
-};
-tutorial.MultiplicationServiceClient.prototype.new_seqid = function () {
-  return (this._seqid += 1);
-};
-
-tutorial.MultiplicationServiceClient.prototype.multiply = function (
-  n1,
-  n2,
-  callback
-) {
-  this._seqid = this.new_seqid();
-  if (callback === undefined) {
-    var _defer = Q.defer();
-    this._reqs[this.seqid()] = function (error, result) {
-      if (error) {
-        _defer.reject(error);
-      } else {
-        _defer.resolve(result);
+        case 0:
+          input.skip(ftype);
+          break;
+        default:
+          input.skip(ftype);
       }
-    };
-    this.send_multiply(n1, n2);
-    return _defer.promise;
-  } else {
-    this._reqs[this.seqid()] = callback;
-    this.send_multiply(n1, n2);
-  }
-};
-
-tutorial.MultiplicationServiceClient.prototype.send_multiply = function (
-  n1,
-  n2
-) {
-  var output = new this.pClass(this.output);
-  var params = {
-    n1: n1,
-    n2: n2,
-  };
-  var args = new tutorial.MultiplicationService_multiply_args(params);
-  try {
-    output.writeMessageBegin('multiply', Thrift.MessageType.CALL, this.seqid());
-    args.write(output);
-    output.writeMessageEnd();
-    return this.output.flush();
-  } catch (e) {
-    delete this._reqs[this.seqid()];
-    if (typeof output.reset === 'function') {
-      output.reset();
+      input.readFieldEnd();
     }
-    throw e;
+    input.readStructEnd();
+    return;
   }
-};
 
-tutorial.MultiplicationServiceClient.prototype.recv_multiply = function (
-  input,
-  mtype,
-  rseqid
-) {
-  var callback = this._reqs[rseqid] || function () {};
-  delete this._reqs[rseqid];
-  if (mtype == Thrift.MessageType.EXCEPTION) {
-    var x = new Thrift.TApplicationException();
-    x.read(input);
-    input.readMessageEnd();
-    return callback(x);
+  write (output) {
+    output.writeStructBegin('MultiplicationService_multiply_result');
+    if (this.success !== null && this.success !== undefined) {
+      output.writeFieldBegin('success', Thrift.Type.I32, 0);
+      output.writeI32(this.success);
+      output.writeFieldEnd();
+    }
+    output.writeFieldStop();
+    output.writeStructEnd();
+    return;
   }
-  var result = new tutorial.MultiplicationService_multiply_result();
-  result.read(input);
-  input.readMessageEnd();
 
-  if (null !== result.success) {
-    return callback(null, result.success);
+};
+tutorial.MultiplicationServiceClient = exports.Client = class MultiplicationServiceClient {
+  constructor(output, pClass) {
+    this.output = output;
+    this.pClass = pClass;
+    this._seqid = 0;
+    this._reqs = {};
   }
-  return callback('multiply failed: unknown result');
-};
-tutorial.MultiplicationServiceProcessor = exports.Processor = function (
-  handler
-) {
-  this._handler = handler;
-};
-tutorial.MultiplicationServiceProcessor.prototype.process = function (
-  input,
-  output
-) {
-  var r = input.readMessageBegin();
-  if (this['process_' + r.fname]) {
-    return this['process_' + r.fname].call(this, r.rseqid, input, output);
-  } else {
-    input.skip(Thrift.Type.STRUCT);
+  seqid () { return this._seqid; }
+  new_seqid () { return this._seqid += 1; }
+
+  multiply (n1, n2) {
+    this._seqid = this.new_seqid();
+    const self = this;
+    return new Promise((resolve, reject) => {
+      self._reqs[self.seqid()] = (error, result) => {
+        return error ? reject(error) : resolve(result);
+      };
+      self.send_multiply(n1, n2);
+    });
+  }
+
+  send_multiply (n1, n2) {
+    const output = new this.pClass(this.output);
+    const params = {
+      n1: n1,
+      n2: n2
+    };
+    const args = new tutorial.MultiplicationService_multiply_args(params);
+    try {
+      output.writeMessageBegin('multiply', Thrift.MessageType.CALL, this.seqid());
+      args.write(output);
+      output.writeMessageEnd();
+      return this.output.flush();
+    }
+    catch (e) {
+      delete this._reqs[this.seqid()];
+      if (typeof output.reset === 'function') {
+        output.reset();
+      }
+      throw e;
+    }
+  }
+
+  recv_multiply (input, mtype, rseqid) {
+    const callback = this._reqs[rseqid] || function() {};
+    delete this._reqs[rseqid];
+    if (mtype == Thrift.MessageType.EXCEPTION) {
+      const x = new Thrift.TApplicationException();
+      x.read(input);
+      input.readMessageEnd();
+      return callback(x);
+    }
+    const result = new tutorial.MultiplicationService_multiply_result();
+    result.read(input);
     input.readMessageEnd();
-    var x = new Thrift.TApplicationException(
-      Thrift.TApplicationExceptionType.UNKNOWN_METHOD,
-      'Unknown function ' + r.fname
-    );
-    output.writeMessageBegin(r.fname, Thrift.MessageType.EXCEPTION, r.rseqid);
-    x.write(output);
-    output.writeMessageEnd();
-    output.flush();
+
+    if (null !== result.success) {
+      return callback(null, result.success);
+    }
+    return callback('multiply failed: unknown result');
   }
 };
-tutorial.MultiplicationServiceProcessor.prototype.process_multiply = function (
-  seqid,
-  input,
-  output
-) {
-  var args = new tutorial.MultiplicationService_multiply_args();
-  args.read(input);
-  input.readMessageEnd();
-  if (this._handler.multiply.length === 2) {
-    Q.fcall(this._handler.multiply.bind(this._handler), args.n1, args.n2)
-      .then(function (result) {
-        var result_obj = new tutorial.MultiplicationService_multiply_result({
-          success: result,
-        });
-        output.writeMessageBegin('multiply', Thrift.MessageType.REPLY, seqid);
+tutorial.MultiplicationServiceProcessor = exports.Processor = class MultiplicationServiceProcessor {
+  constructor(handler) {
+    this._handler = handler;
+  }
+  process (input, output) {
+    const r = input.readMessageBegin();
+    if (this['process_' + r.fname]) {
+      return this['process_' + r.fname].call(this, r.rseqid, input, output);
+    } else {
+      input.skip(Thrift.Type.STRUCT);
+      input.readMessageEnd();
+      const x = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN_METHOD, 'Unknown function ' + r.fname);
+      output.writeMessageBegin(r.fname, Thrift.MessageType.EXCEPTION, r.rseqid);
+      x.write(output);
+      output.writeMessageEnd();
+      output.flush();
+    }
+  }
+  process_multiply (seqid, input, output) {
+    const args = new tutorial.MultiplicationService_multiply_args();
+    args.read(input);
+    input.readMessageEnd();
+    if (this._handler.multiply.length === 2) {
+      Promise.resolve(this._handler.multiply.bind(this._handler)(
+        args.n1,
+        args.n2
+      )).then(result => {
+        const result_obj = new tutorial.MultiplicationService_multiply_result({success: result});
+        output.writeMessageBegin("multiply", Thrift.MessageType.REPLY, seqid);
         result_obj.write(output);
         output.writeMessageEnd();
         output.flush();
-      })
-      .catch(function (err) {
-        var result;
-        result = new Thrift.TApplicationException(
-          Thrift.TApplicationExceptionType.UNKNOWN,
-          err.message
-        );
-        output.writeMessageBegin(
-          'multiply',
-          Thrift.MessageType.EXCEPTION,
-          seqid
-        );
+      }).catch(err => {
+        let result;
+        result = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+        output.writeMessageBegin("multiply", Thrift.MessageType.EXCEPTION, seqid);
         result.write(output);
         output.writeMessageEnd();
         output.flush();
       });
-  } else {
-    this._handler.multiply(args.n1, args.n2, function (err, result) {
-      var result_obj;
-      if (err === null || typeof err === 'undefined') {
-        result_obj = new tutorial.MultiplicationService_multiply_result(
-          err !== null || typeof err === 'undefined' ? err : { success: result }
-        );
-        output.writeMessageBegin('multiply', Thrift.MessageType.REPLY, seqid);
-      } else {
-        result_obj = new Thrift.TApplicationException(
-          Thrift.TApplicationExceptionType.UNKNOWN,
-          err.message
-        );
-        output.writeMessageBegin(
-          'multiply',
-          Thrift.MessageType.EXCEPTION,
-          seqid
-        );
-      }
-      result_obj.write(output);
-      output.writeMessageEnd();
-      output.flush();
-    });
+    } else {
+      this._handler.multiply(args.n1, args.n2, (err, result) => {
+        let result_obj;
+        if ((err === null || typeof err === 'undefined')) {
+          result_obj = new tutorial.MultiplicationService_multiply_result((err !== null || typeof err === 'undefined') ? err : {success: result});
+          output.writeMessageBegin("multiply", Thrift.MessageType.REPLY, seqid);
+        } else {
+          result_obj = new Thrift.TApplicationException(Thrift.TApplicationExceptionType.UNKNOWN, err.message);
+          output.writeMessageBegin("multiply", Thrift.MessageType.EXCEPTION, seqid);
+        }
+        result_obj.write(output);
+        output.writeMessageEnd();
+        output.flush();
+      });
+    }
   }
 };
