@@ -45,6 +45,18 @@ thrift is codegen + boilerplate code for transporting data
 - what you defined in your .thrift file, now you have to write what they do. in order to match what you defined in the thrift file, you have to match all the methods and inputs.
 - for js, you can generate a ts file to describe the intended interface with types, and not have to wade through prototype code to find out what you need to write
 
+## sharing code with others
+
+the entire point of thrift (and protobuf) is to have a standardized contract/api/interface where everyone in the team just needs to know the thrift file in order to be able to use / write handlers for the given function/service.
+
+to share with someone else, if it is:
+
+- a client:
+  - all you have to share is the thrift file.
+  - the user can generate code for whatever supported language the user wants and connect to the server
+- a server:
+  - because the dev also write the handler for the given service, the generated and implemented project has to be shared.
+
 ## references
 
 - most helpful tutorial (ruby): https://medium.com/@goyal.1234rahul/my-first-apache-thrift-service-6be3e8bf650f
